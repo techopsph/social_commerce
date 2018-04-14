@@ -1,0 +1,190 @@
+{
+    "name": "techosph/drops-8-social_commerce",
+    "description": "Install drops-8 with Composer on Pantheon. Open Social with Commerce",
+    "type": "project",
+    "license": "MIT",
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        "commerce_base": {
+            "type": "vcs",
+            "url": "https://github.com/drupalcommerce/commerce_base"
+        },
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        "goalgorilla/social_docker_0": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        "goalgorilla/social_docker_1": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        "goalgorilla/social_docker_2": {
+            "type": "package",
+            "url": null
+        }
+    },
+    "require": {
+        "php": ">=7.0.8",
+        "composer/installers": "^1.0.20",
+        "cweagans/composer-patches": "^1.0",
+        "drupal-composer/drupal-scaffold": "^2.0.1",
+        "drupal/config_direct_save": "^1.0",
+        "drupal/config_installer": "^1.0",
+        "drupal/console": "^1",
+
+        "drupal/simple_block": "^1.0@beta",
+        "drush/drush": "~8",
+        "rvtraveller/qs-composer-installer": "^1.1",
+        "drush-ops/behat-drush-endpoint": "^0.0.5",
+        "pantheon-systems/quicksilver-pushback": "~1",
+        "webflo/drupal-core-strict": "^8",
+
+        "ext-curl": "*",
+        
+        "drupal/admin_toolbar": "~1.0",
+        "drupal/core": "~8.4.6",
+        "drupal/commerce": "~2.0",
+        "drupal/search_api": "^1.6",
+        "drupal/swiftmailer": "~1.0",
+        "drupal/token": "~1.0",
+        "drupalcommerce/commerce_base": "dev-8.x-1.x",
+        "oomphinc/composer-installers-extender": "^1.1",
+        "webflo/drupal-finder": "^1.0",
+        "webmozart/path-util": "^2.3",
+        
+        "goalgorilla/open_social": "dev-8.x-1.x",
+        "goalgorilla/open_social_scripts": "dev-master",
+        "drupal/commerce_paypal": "^1.0@beta",
+        "drupal/commerce_shipping": "^2.0@beta"
+    },
+    "require-dev": {
+        "mikey179/vfsstream": "^1.2",
+        "behat/behat": "3.*",
+        "behat/mink": "^1.7",
+        "behat/mink-extension": "^2.2",
+        "behat/mink-goutte-driver": "^1.2",
+        "jcalderonzumba/gastonjs": "^1.0.2",
+        "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
+        "drupal/drupal-extension": "^3.3.0",
+        "phpunit/phpunit": "^4.8",
+        "symfony/css-selector": "^2.8",
+
+        "webflo/drupal-core-require-dev": "~8.4",
+        "jcalderonzumba/gastonjs": "~1.0.2",
+        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
+        "mikey179/vfsStream": "~1.2",
+        "symfony/css-selector": "~2.8",
+        "behat/mink-selenium2-driver": "*",
+        "drupal/coder": "dev-8.x-2.x",
+        "phpmd/phpmd": "@stable",
+        "pdepend/pdepend": "2.1.0",
+        "sebastian/phpcpd": "*",
+        "drupal/console": "1.1",
+        "squizlabs/html_codesniffer": "*"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true,
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php"
+        ]
+    },
+    "scripts": {
+        "build-assets": [
+            "@prepare-for-pantheon",
+            "composer install --optimize-autoloader --no-dev"
+        ],
+        "lint": "find web/modules/custom web/themes/custom -name '*.php' -exec php -l {} \\;",
+        "code-sniff": "echo 'No code sniff step defined.'",
+        "unit-test": "echo 'No unit test step defined.'",
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        
+        "prepare-for-pantheon": "DrupalProject\\composer\\ScriptHandler::prepareForPantheon",
+
+        
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        
+        "post-install-cmd": [
+            "@drupal-scaffold",
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "find .circleci/scripts/pantheon/ -type f | xargs chmod 755",
+            "find tests/scripts/ -type f | xargs chmod 755"
+        ],
+        "post-create-project-cmd": [
+            "@drupal-scaffold",
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ]
+    },
+    "extra": {
+        "installer-paths": {
+            "web/core": ["type:drupal-core"],
+            "web/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/contrib/{$name}": ["type:drupal-drush"],
+            "web/profiles/contrib/social": ["goalgorilla/open_social"],
+            "web/libraries/{$name}": [
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
+            ],
+            "scripts/{$name}": [
+                "goalgorilla/open_social_scripts"
+            ],
+            "installer-types": [
+                "bower-asset",
+                "npm-asset"
+            ]
+        },
+        "enable-patching": true,
+        "build-env": {
+            "install-cms": [
+                "drush site-install standard --account-mail={account-mail} --account-name={account-name} --account-pass={account-pass} --site-mail={site-mail} --site-name={site-name} --yes",
+                "drush pm-enable config_direct_save simple_block --yes",
+                "drush pm-uninstall block_content --yes"
+            ],
+            "export-configuration": "drush config-export --yes"
+        },
+        "drupal-scaffold": {
+            "source": "https://raw.githubusercontent.com/pantheon-systems/drops-8-scaffolding/{version}/{path}",
+            "includes": [
+                "sites/default/default.services.pantheon.preproduction.yml",
+                "sites/default/settings.pantheon.php"
+            ],
+            "excludes": [
+                ".csslintrc",
+                ".editorconfig",
+                ".eslintignore",
+                ".eslintrc.json",
+                ".htaccess",
+                "web.config"
+            ]
+        }
+    },
+    "config": {
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "platform": {
+            "php": "7.0.8"
+        }
+    }
+}
